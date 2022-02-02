@@ -17,8 +17,8 @@ import clientFunctions as cf
 if len(argv) < 4:
     print("You need the player name to start the game.")
     #exit(-1)
-    playerName = "Test" # For debug
-    playerName = "p2" # add by me
+    playerName = "Test"  # For debug
+    playerName = "p2"  # add by me
     ip = HOST
     port = PORT
 else:
@@ -34,11 +34,12 @@ status = statuses[0]
 
 hintState = ("", "")
 
+
 def manageInput():
     global run
     global status
     global command
-    
+
     # My code
     global myCardValues
     global playerNames
@@ -153,19 +154,26 @@ def manageInput():
         stdout.flush()
         """
 
+
 # My code
 
 numPlayer = -1
 playerNames = []
-userTables = np.zeros(4*5*4, dtype=np.int8) # 4 users, 5 cards per users, 4 value per card: Hint value, Hint color, Value,  color
+userTables = np.zeros(
+    4 * 5 * 4, dtype=np.int8
+)  # 4 users, 5 cards per users, 4 value per card: Hint value, Hint color, Value,  color
 userTables = np.reshape(userTables, (4, 5, 4))
 oldUserTables = deepcopy(userTables)
-table = np.zeros(5, dtype=np.int8) # Table value, 5 places, 1 value [value] if value = 0 no card 
-myCardValues = np.zeros(5*2, dtype=np.int8) #5 cards, 2 value per card: value, color
-myCardValues = np.reshape(myCardValues, (5,2)) - 1
+table = np.zeros(
+    5, dtype=np.int8
+)  # Table value, 5 places, 1 value [value] if value = 0 no card
+myCardValues = np.zeros(
+    5 * 2, dtype=np.int8)  #5 cards, 2 value per card: value, color
+myCardValues = np.reshape(myCardValues, (5, 2)) - 1
 discardPile = None
 usedNoteTokens = None
 numberOfCards = None
+
 
 def colorToValue(color):
     # base on the order of the tableCards inside data
@@ -181,6 +189,7 @@ def colorToValue(color):
         return 3
     return 4
 
+
 def valueToColor(value):
     if value == -1:
         return None
@@ -194,46 +203,59 @@ def valueToColor(value):
         return "blue"
     return "white"
 
+
 def discardCard(s, cardNumber):
     global myCardValues
     global usedNoteTokens
     try:
-        s.send(GameData.ClientPlayerDiscardCardRequest(playerName, cardNumber).serialize())
+        s.send(
+            GameData.ClientPlayerDiscardCardRequest(playerName,
+                                                    cardNumber).serialize())
         # My code
         # I remove the card from the set of cards. Same procedure of the case when we play a card
-        if myCardValues[cardNumber][0] != -1 or myCardValues[cardNumber][1] != -1:
+        if myCardValues[cardNumber][0] != -1 or myCardValues[cardNumber][
+                1] != -1:
             myCardValues = list(myCardValues)
-            myCardValues.pop(cardNumber) #remove the played card
-            myCardValues.insert(len(myCardValues), [-1, -1]) # inserted an invalid cart
-            myCardValues = np.array(myCardValues) # convert the list into an array
+            myCardValues.pop(cardNumber)  #remove the played card
+            myCardValues.insert(len(myCardValues),
+                                [-1, -1])  # inserted an invalid cart
+            myCardValues = np.array(
+                myCardValues)  # convert the list into an array
 
         if usedNoteTokens is None:
             usedNoteTokens = 1
         else:
-            usedNoteTokens -= 1 # I decrease the # of used token
+            usedNoteTokens -= 1  # I decrease the # of used token
         return True
     except:
         print("Maybe you wanted to type 'discard <num>'?")
         return False
 
+
 def playCard(s, cardNumber):
     global myCardValues
     try:
         # My code: remove the current card from the set, I lose the information about that card
-        if myCardValues[cardNumber][0] != -1 or myCardValues[cardNumber][1] != -1:
+        if myCardValues[cardNumber][0] != -1 or myCardValues[cardNumber][
+                1] != -1:
             myCardValues = list(myCardValues)
-            myCardValues.pop(cardNumber) #remove the played card
-            myCardValues.insert(len(myCardValues), [-1, -1]) # inserted an invalid cart
-            myCardValues = np.array(myCardValues) # convert the list into an array
+            myCardValues.pop(cardNumber)  #remove the played card
+            myCardValues.insert(len(myCardValues),
+                                [-1, -1])  # inserted an invalid cart
+            myCardValues = np.array(
+                myCardValues)  # convert the list into an array
 
-        s.send(GameData.ClientPlayerPlayCardRequest(playerName, cardNumber).serialize())
+        s.send(
+            GameData.ClientPlayerPlayCardRequest(playerName,
+                                                 cardNumber).serialize())
         return True
     except Exception as e:
         print(e)
         print("Maybe you wanted to type 'play <num> '?")
         return False
 
-def hintCards(s, t, destination, value, places = None):
+
+def hintCards(s, t, destination, value, places=None):
     global userTables
     global usedNoteTokens
     try:
@@ -248,14 +270,19 @@ def hintCards(s, t, destination, value, places = None):
                 return False
         else:
             if value not in ["green", "red", "blue", "yellow", "white"]:
-                print("Error: card color can only be green, red, blue, yellow or white")
+                print(
+                    "Error: card color can only be green, red, blue, yellow or white"
+                )
                 return False
-        s.send(GameData.ClientHintData(playerName, destination, t, value).serialize())
+        s.send(
+            GameData.ClientHintData(playerName, destination, t,
+                                    value).serialize())
         # My code
         #posLength = len(command.split(" "))
         #arguments = places #command.split(" ")
         playerIndex = playerNames.index(destination)
-        if playerNames.index(playerName) < playerIndex or playerNames.index(playerName) == 0:
+        if playerNames.index(playerName) < playerIndex or playerNames.index(
+                playerName) == 0:
             playerIndex -= 1
         if t == "value":
             # hint value user value posOfValues
@@ -270,12 +297,14 @@ def hintCards(s, t, destination, value, places = None):
         if usedNoteTokens is None:
             usedNoteTokens = 1
         else:
-            usedNoteTokens += 1 # I increase the # of used token
+            usedNoteTokens += 1  # I increase the # of used token
         return True
     except:
-        print("Maybe you wanted to type 'hint <type> <destinatary> <value> <pile position>'?")
+        print(
+            "Maybe you wanted to type 'hint <type> <destinatary> <value> <pile position>'?"
+        )
         return False
-    
+
 
 def suggestedMove(s):
     global numberOfCards
@@ -294,7 +323,7 @@ def suggestedMove(s):
 
     usedNoteTokens = data.usedNoteTokens
     #playerNames = []
-    
+
     numberOfCards = data.handSize
 
     numPlayer = len(data.players)
@@ -304,17 +333,22 @@ def suggestedMove(s):
 
     oldUserTables = deepcopy(userTables)
 
-    pi = 0 # player index
+    pi = 0  # player index
     for p in data.players:
-            #playerNames.append(p.name)
+        #playerNames.append(p.name)
         if p.name != playerName:
             edit = False
             for ci, c in enumerate(p.hand):
                 userTables[pi][ci][2] = c.value
                 userTables[pi][ci][3] = colorToValue(c.color)
-                if any(oldUserTables[pi].flatten() > 0) and (oldUserTables[pi][ci][2] != c.value or oldUserTables[pi][ci][3] != colorToValue(c.color)) and edit == False:
+                if any(oldUserTables[pi].flatten() > 0) and (
+                        oldUserTables[pi][ci][2] != c.value
+                        or oldUserTables[pi][ci][3] != colorToValue(
+                            c.color)) and edit == False:
                     #userTables[pi] = np.concatenate((userTables[pi][:ci], userTables[pi][ci+1:], np.array(np.reshape([-1, -1, c.value, colorToValue(c.color)], (1,4)))))
-                    userTables[pi] = np.concatenate((userTables[pi][:ci], userTables[pi][ci+1:], np.reshape([-1,-1,-1,-1], (1,4))))
+                    userTables[pi] = np.concatenate(
+                        (userTables[pi][:ci], userTables[pi][ci + 1:],
+                         np.reshape([-1, -1, -1, -1], (1, 4))))
                     edit = True
             pi += 1
 
@@ -331,78 +365,95 @@ def suggestedMove(s):
     discardPile = None
     for _, dc in enumerate(data.discardPile):
         if discardPile is None:
-            discardPile = np.reshape(np.array([colorToValue(dc.color), dc.value]), (1, 2))
+            discardPile = np.reshape(
+                np.array([colorToValue(dc.color), dc.value]), (1, 2))
         else:
-            discardPile = np.concatenate((discardPile, [[colorToValue(dc.color), dc.value]]))
+            discardPile = np.concatenate(
+                (discardPile, [[colorToValue(dc.color), dc.value]]))
 
     stop = False
-    # If a card is already present I can discard it. I can only produce one fire per color. 
+    # If a card is already present I can discard it. I can only produce one fire per color.
     if usedNoteTokens > 0:
         for i in range(NUMBER_OF_CARD):
             #print(f"VALUE: {myCardValues[i][0]} - COLOR: {myCardValues[i][1]} - {valueToColor(myCardValues[i][1])}")
-            if myCardValues[i][0] > -1 and myCardValues[i][1] > -1 and myCardValues[i][0] <= table[myCardValues[i][1]]:
-                print(f"Suggest move: discard {i} because already present")
+            if myCardValues[i][0] > -1 and myCardValues[i][
+                    1] > -1 and myCardValues[i][0] <= table[myCardValues[i]
+                                                            [1]]:
+                print(f"discard {i} because already present")
                 if not discardCard(s, i):
                     continue
                 stop = True
         # case I have 2 cards with same value of same color
         for i in range(NUMBER_OF_CARD):
             for j in range(NUMBER_OF_CARD):
-                if i != j and ( all(myCardValues[i] > -1) and all(myCardValues[i] == myCardValues[j])):
-                    print(f"Suggest move: discard {i} because already present in the cards set")
+                if i != j and (all(myCardValues[i] > -1)
+                               and all(myCardValues[i] == myCardValues[j])):
+                    print(
+                        f"discard {i} because already present in the cards set"
+                    )
                     if not discardCard(s, i):
                         continue
-                    stop = True 
+                    stop = True
         # add discard case in case that all cards of a value are played
-        for i in range(NUMBER_OF_CARD): # I iterate over possible values
+        for i in range(NUMBER_OF_CARD):  # I iterate over possible values
             if all(table > i):
-                for j in range(NUMBER_OF_CARD): # I iterate over my cards
+                for j in range(NUMBER_OF_CARD):  # I iterate over my cards
                     if myCardValues[j][0] == i:
-                        print(f"Suggest move: discard {i} because already present in the table set")
+                        print(
+                            f"discard {i} because already present in the table set"
+                        )
                         if not discardCard(s, i):
                             continue
-                        stop = True   
+                        stop = True
                     if stop:
                         break
             if stop:
                 break
         # discard a card because is impossible to play it
-        
+
         for i in range(NUMBER_OF_CARD):
             if all(myCardValues[i] > -1):
-                if table[myCardValues[i][1]] >= myCardValues[i][0]: # case card already played
-                    print(f"Suggest move: discard {i} because not need any more") 
+                if table[myCardValues[i][1]] >= myCardValues[i][
+                        0]:  # case card already played
+                    print(f"discard {i} because not need any more")
                     if not discardCard(s, i):
                         continue
-                    stop = True   
+                    stop = True
                 # case card impossible to play
                 if stop == False and discardPile is not None:
-                    checkVector = {0: 0, 1:0, 2:0, 3:0, 4:0}
+                    checkVector = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
                     for j in range(table[myCardValues[i][1]]):
                         checkVector[j] += 1
                     for j in range(len(discardPile)):
-                        if discardPile[j][0] == myCardValues[i][1] and discardPile[j][1] < myCardValues[i][0]: # same color and value before my card
+                        if discardPile[j][0] == myCardValues[i][
+                                1] and discardPile[j][1] < myCardValues[i][
+                                    0]:  # same color and value before my card
                             checkVector[discardPile[j][1]] += 1
                     if myCardValues[i][0] == 1 and checkVector[0] == 3:
-                        print(f"Suggest move: discard {i} because you can't play it") 
+                        print(f"discard {i} because you can't play it")
                         if not discardCard(s, i):
                             continue
-                        stop = True 
-                    if myCardValues[i][0] == 2 and checkVector[0] == 3 and checkVector[1] == 2:
-                        print(f"Suggest move: discard {i} because you can't play it") 
+                        stop = True
+                    if myCardValues[i][0] == 2 and checkVector[
+                            0] == 3 and checkVector[1] == 2:
+                        print(f"discard {i} because you can't play it")
                         if not discardCard(s, i):
                             continue
-                        stop = True 
-                    if myCardValues[i][0] == 3 and checkVector[0] == 3 and checkVector[1] == 2 and checkVector[2] == 2:
-                        print(f"Suggest move: discard {i} because you can't play it") 
+                        stop = True
+                    if myCardValues[i][0] == 3 and checkVector[
+                            0] == 3 and checkVector[1] == 2 and checkVector[
+                                2] == 2:
+                        print(f"discard {i} because you can't play it")
                         if not discardCard(s, i):
                             continue
-                        stop = True 
-                    if myCardValues[i][0] == 4 and checkVector[0] == 3 and checkVector[1] == 2 and checkVector[2] == 2 and checkVector[2] == 3:
-                        print(f"Suggest move: discard {i} because you can't play it") 
+                        stop = True
+                    if myCardValues[i][0] == 4 and checkVector[
+                            0] == 3 and checkVector[1] == 2 and checkVector[
+                                2] == 2 and checkVector[2] == 3:
+                        print(f"discard {i} because you can't play it")
                         if not discardCard(s, i):
                             continue
-                        stop = True 
+                        stop = True
             if stop:
                 break
 
@@ -412,14 +463,14 @@ def suggestedMove(s):
             for j in range(NUMBER_OF_CARD):
                 # table with 2 rows we have on the first cell the value and in the second the color
                 #if (myCardValues[i][0] == 1 and table[myCardValues[i][1]][0] == 0) or \
-                #(myCardValues[i][1] == table[myCardValues[i][1]][1] and  myCardValues[i][0] == (table[myCardValues[i][1]][0] + 1) and table[myCardValues[i][j]][0] <= 4): 
+                #(myCardValues[i][1] == table[myCardValues[i][1]][1] and  myCardValues[i][0] == (table[myCardValues[i][1]][0] + 1) and table[myCardValues[i][j]][0] <= 4):
                 # With the change that table is only one row we have:
                 if sum(table) == 0 and myCardValues[i][0] == 1:
-                    print(f"Suggest move: play {i}")
+                    print(f"play {i}")
                     stop = True
                 elif myCardValues[i][1] != -1 and ((myCardValues[i][0] == 1 and table[myCardValues[i][1]] == 0) or \
-                (myCardValues[i][0] == (table[myCardValues[i][1]] + 1) and table[myCardValues[i][j]] <= 4)): 
-                    print(f"Suggest move: play {i}")
+                (myCardValues[i][0] == (table[myCardValues[i][1]] + 1) and table[myCardValues[i][j]] <= 4)):
+                    print(f"play {i}")
                     stop = True
                 if stop:
                     if not playCard(s, i):
@@ -427,71 +478,89 @@ def suggestedMove(s):
                     break
             if stop:
                 break
-    
+
     suggestPlayer = None
-    valuePerColor = np.zeros(numPlayer * NUMBER_OF_CARD) # NUMBER_OF_CARD in this case is NUMBER_OF_COLORS
+    valuePerColor = np.zeros(
+        numPlayer *
+        NUMBER_OF_CARD)  # NUMBER_OF_CARD in this case is NUMBER_OF_COLORS
     valuePerColor = np.reshape(valuePerColor, (numPlayer, NUMBER_OF_CARD))
-            
-    if BLUE_TOKEN - usedNoteTokens > 0: # I have to check that I have 1 token available for do a Hint.
+
+    if BLUE_TOKEN - usedNoteTokens > 0:  # I have to check that I have 1 token available for do a Hint.
         if stop == False:
             # Hint suggestion
             # Value part
             suggestValue = None
-            
+
             for i in range(numPlayer - 1):
                 for v in range(NUMBER_OF_CARD):
                     for ci in range(NUMBER_OF_CARD):
                         card = userTables[i][ci]
-                        if card[2] == v and card[2] > table[card[3]] and card[0] != 1:
+                        if card[2] == v and card[2] > table[
+                                card[3]] and card[0] != 1:
                             suggestPlayer = i
                             suggestValue = v
                         if suggestPlayer is not None:
                             break
                     if suggestPlayer is not None:
-                            break
+                        break
                 if suggestPlayer is not None:
-                            break
-            
+                    break
+
             suggestHintValues = []
             for i in range(5):
-                if suggestPlayer is not None and suggestValue is not None and userTables[suggestPlayer][i][2] == suggestValue:
+                if suggestPlayer is not None and suggestValue is not None and userTables[
+                        suggestPlayer][i][2] == suggestValue:
                     suggestHintValues.append(i)
-            
+
             # Color part
-            for pi in range(numPlayer - 1): # for each player
-                for ci in range(NUMBER_OF_CARD): # for each card
+            for pi in range(numPlayer - 1):  # for each player
+                for ci in range(NUMBER_OF_CARD):  # for each card
                     # we count the # of card of that colour.
-                    if userTables[pi][ci][1] != 1: # if the card color is already hinted we don't add to the sum.
+                    if userTables[pi][ci][
+                            1] != 1:  # if the card color is already hinted we don't add to the sum.
                         valuePerColor[pi][userTables[pi][ci][3]] += 1
-            hintPlayers, hintColorValues = np.where(valuePerColor == np.max(valuePerColor)) 
-            hintPlayer, hintColor = hintPlayers[0], hintColorValues[0] # I have to take only the first case
-            # todo: add the part of check that is good to do color hint only if we don't have nothing else to suggest that can be play soon. 
+            hintPlayers, hintColorValues = np.where(
+                valuePerColor == np.max(valuePerColor))
+            hintPlayer, hintColor = hintPlayers[0], hintColorValues[
+                0]  # I have to take only the first case
+            # todo: add the part of check that is good to do color hint only if we don't have nothing else to suggest that can be play soon.
             # fix from tabel[hintColor][0] -> table[hintColor]
-            if valuePerColor[hintPlayer, hintColor] > table[hintColor] and np.max(valuePerColor) != 0: # I suggest the color if # of color of that color is grater then the # of card in the table
+            if valuePerColor[hintPlayer, hintColor] > table[hintColor] and np.max(
+                    valuePerColor
+            ) != 0:  # I suggest the color if # of color of that color is grater then the # of card in the table
                 suggestColorValues = []
                 for i in range(5):
                     if userTables[hintPlayer][i][3] == hintColor:
                         suggestColorValues.append(i)
-                
-                
+
                 if hintPlayer is not None:
-                    if playerNames.index(playerName) < hintPlayer or playerNames.index(playerName) == 0:
+                    if playerNames.index(
+                            playerName) < hintPlayer or playerNames.index(
+                                playerName) == 0:
                         hintPlayer += 1
-                
-                    print(f"Suggested move: hint color {playerNames[hintPlayer]} {valueToColor(hintColor)} {suggestColorValues}") # I can send a 0 and I will obtain the correct positions.
-                    hintCards(s, "color", playerNames[hintPlayer], valueToColor(hintColor), suggestColorValues)
+
+                    print(
+                        f"Suggested move: hint color {playerNames[hintPlayer]} {valueToColor(hintColor)} {suggestColorValues}"
+                    )  # I can send a 0 and I will obtain the correct positions.
+                    hintCards(s, "color", playerNames[hintPlayer],
+                              valueToColor(hintColor), suggestColorValues)
             else:
-                
+
                 if suggestPlayer is not None:
-                    if playerNames.index(playerName) < suggestPlayer or playerNames.index(playerName) == 0:
+                    if playerNames.index(
+                            playerName) < suggestPlayer or playerNames.index(
+                                playerName) == 0:
                         suggestPlayer += 1
-                
-                
-                    print(f"Suggested move: hint value {playerNames[suggestPlayer]} {suggestValue} {suggestHintValues}")
-                    hintCards(s, "value", playerNames[suggestPlayer], suggestValue, suggestHintValues)
+
+                    print(
+                        f"Suggested move: hint value {playerNames[suggestPlayer]} {suggestValue} {suggestHintValues}"
+                    )
+                    hintCards(s, "value", playerNames[suggestPlayer],
+                              suggestValue, suggestHintValues)
     # Discard part
-    if usedNoteTokens > 0 and stop == False and suggestPlayer is None and np.max(valuePerColor) == 0:
-        cardsValue = myCardValues[:,0]
+    if usedNoteTokens > 0 and stop == False and suggestPlayer is None and np.max(
+            valuePerColor) == 0:
+        cardsValue = myCardValues[:, 0]
         min = None
         minI = None
         for i in range(NUMBER_OF_CARD):
@@ -501,9 +570,11 @@ def suggestedMove(s):
         if minI is not None:
             print(f"Suggested move: discard {minI}")
             discardCard(s, minI)
-    
+
+
 def computeScore(table):
     return np.sum(table)
+
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     request = GameData.ClientPlayerAddData(playerName)
@@ -532,14 +603,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if not data:
             continue
         data = GameData.GameData.deserialize(data)
-       
+
         if type(data) is GameData.ServerPlayerStartRequestAccepted:
             dataOk = True
             # My code
-            numPlayer = data.connectedPlayers - 1 # I don't consider my self a player
+            numPlayer = data.connectedPlayers - 1  # I don't consider my self a player
             # toask: I can add a player while an other has marked his state as ready
-            
-            print("Ready: " + str(data.acceptedStartRequests) + "/"  + str(data.connectedPlayers) + " players")
+
+            print("Ready: " + str(data.acceptedStartRequests) + "/" +
+                  str(data.connectedPlayers) + " players")
             data = s.recv(DATASIZE)
             data = GameData.GameData.deserialize(data)
         if type(data) is GameData.ServerStartGameData:
@@ -566,18 +638,18 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 print("]")
             print("Discard pile: ")
             for c in data.discardPile:
-                print("\t" + c.toClientString())            
+                print("\t" + c.toClientString())
             print("Note tokens used: " + str(data.usedNoteTokens) + "/8")
             print("Storm tokens used: " + str(data.usedStormTokens) + "/3")
 
             # My code
-            #suggestedMove(s) 
+            #suggestedMove(s)
             #data = None
             if data.currentPlayer == playerName:
-                suggestedMove(s) 
+                suggestedMove(s)
                 print("[" + playerName + " - " + status + "]: ", end="")
                 #manageInput()
-            
+
         if type(data) is GameData.ServerActionInvalid:
             dataOk = True
             print("Invalid action performed. Reason:")
@@ -586,7 +658,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             dataOk = True
             print("Action valid!")
             print("Current player: " + data.player)
-            
+
             # My code
             if playerName == data.player:
                 suggestedMove(s)
@@ -597,7 +669,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             dataOk = True
             print("Nice move!")
             print("Current player: " + data.player)
-            
+
             # My code
             if playerName == data.player:
                 suggestedMove(s)
@@ -607,17 +679,18 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if type(data) is GameData.ServerPlayerThunderStrike:
             dataOk = True
             print("OH NO! The Gods are unhappy with you!")
-            
+
             # My code
             if playerName == data.player:
-                suggestedMove(s) 
+                suggestedMove(s)
                 print("[" + playerName + " - " + status + "]: ", end="")
                 #manageInput()
 
         if type(data) is GameData.ServerHintData:
             dataOk = True
             print("Hint type: " + data.type)
-            print("Player " + data.destination + " cards with value " + str(data.value) + " are:")
+            print("Player " + data.destination + " cards with value " +
+                  str(data.value) + " are:")
             for i in data.positions:
                 print("\t" + str(i))
             # My code: add info to my table about my cards
@@ -631,7 +704,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                         myCardValues[i][1] = colorToValue(str(data.value))
                 #print(myCardValues)
                 # After a hint is good to have a suggestion
-                suggestedMove(s) 
+                suggestedMove(s)
                 print("[" + playerName + " - " + status + "]: ", end="")
                 #manageInput()
             else:
@@ -641,13 +714,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 # I don't need because I don't consider my self a player
                 # if playerNames.index(playerName) < posPlayer:
                 #     posPlayer -= 1
-                
+
                 for i in data.positions:
                     if data.type == "value":
                         userTables[posPlayer][i][0] = 1
                     else:
                         userTables[posPlayer][i][1] = 1
-            
 
         if type(data) is GameData.ServerInvalidDataReceived:
             dataOk = True
@@ -665,8 +737,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print("Ready for a new game!")
 
         if not dataOk:
-            print("Unknown or unimplemented data type: " +  str(type(data)))
-        
+            print("Unknown or unimplemented data type: " + str(type(data)))
+
         # I don't think that I need this
         #stdout.flush()
 """
