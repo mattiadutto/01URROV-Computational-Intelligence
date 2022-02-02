@@ -341,14 +341,16 @@ def suggestedMove(s):
             for ci, c in enumerate(p.hand):
                 userTables[pi][ci][2] = c.value
                 userTables[pi][ci][3] = colorToValue(c.color)
-                if any(oldUserTables[pi].flatten() > 0) and (
+                if edit == False and any(oldUserTables[pi].flatten() > 0) and (
                         oldUserTables[pi][ci][2] != c.value
-                        or oldUserTables[pi][ci][3] != colorToValue(
-                            c.color)) and edit == False:
+                        or oldUserTables[pi][ci][3] != colorToValue(c.color)):
                     #userTables[pi] = np.concatenate((userTables[pi][:ci], userTables[pi][ci+1:], np.array(np.reshape([-1, -1, c.value, colorToValue(c.color)], (1,4)))))
                     userTables[pi] = np.concatenate(
-                        (userTables[pi][:ci], userTables[pi][ci + 1:],
+                        (userTables[pi][:ci][:], userTables[pi][ci + 1:][:],
                          np.reshape([-1, -1, -1, -1], (1, 4))))
+                    if ci == 4:
+                        userTables[pi][ci][2] = c.value
+                        userTables[pi][ci][3] = colorToValue(c.color)
                     edit = True
             pi += 1
 
