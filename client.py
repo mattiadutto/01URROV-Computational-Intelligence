@@ -371,40 +371,40 @@ def suggestedMove(s):
                     # case card impossible to play
                     if stop == False and discardPile is not None:
                         checkVector = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
-                        for j in range(table[myCardValues[i][1]]):
-                            checkVector[j] += 1
+                        #for j in range(table[myCardValues[i][1]]):
+                        #    checkVector[j] += 1
                         for j in range(len(discardPile)):
                             if discardPile[j][0] == myCardValues[i][
                                     1] and discardPile[j][1] < myCardValues[i][
                                         0]:  # same color and value before my card
-                                checkVector[discardPile[j][1]] += 1
-                        if myCardValues[i][0] == 1 and checkVector[0] == 3:
+                                checkVector[discardPile[j][1] - 1] += 1
+                        if myCardValues[i][0] == 2 and checkVector[0] == 3:
                             print("[" + playerName + " - " + status + "]: ",
                                   end="")
                             print(f"discard {i} because you can't play it")
                             if not discardCard(s, i):
                                 continue
                             stop = True
-                        if (myCardValues[i][0] == 2 and checkVector[0] == 3
-                                and checkVector[1] == 2):
+                        if (myCardValues[i][0] == 3 and
+                            (checkVector[0] == 3 or checkVector[1] == 2)):
                             print("[" + playerName + " - " + status + "]: ",
                                   end="")
                             print(f"discard {i} because you can't play it")
                             if not discardCard(s, i):
                                 continue
                             stop = True
-                        if (myCardValues[i][0] == 3 and checkVector[0] == 3
-                                and checkVector[1] == 2
-                                and checkVector[2] == 2):
+                        if (myCardValues[i][0] == 4
+                                and (checkVector[0] == 3 or checkVector[1] == 2
+                                     or checkVector[2] == 2)):
                             print("[" + playerName + " - " + status + "]: ",
                                   end="")
                             print(f"discard {i} because you can't play it")
                             if not discardCard(s, i):
                                 continue
                             stop = True
-                        if (myCardValues[i][0] == 4 and checkVector[0] == 3
-                                and checkVector[1] == 2 and checkVector[2] == 2
-                                and checkVector[2] == 3):
+                        if (myCardValues[i][0] == 5 and
+                            (checkVector[0] == 3 or checkVector[1] == 2
+                             or checkVector[2] == 2 or checkVector[3] == 3)):
                             print("[" + playerName + " - " + status + "]: ",
                                   end="")
                             print(f"discard {i} because you can't play it")
@@ -524,10 +524,6 @@ def suggestedMove(s):
             print("[" + playerName + " - " + status + "]: ", end="")
             print(f"discard {minI}")
             discardCard(s, minI)
-
-
-def computeScore(table):
-    return np.sum(table)
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
