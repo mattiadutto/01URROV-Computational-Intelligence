@@ -1,51 +1,28 @@
 # Computational Intelligence 2021-2022
-
-Exam of computational intelligence 2021 - 2022. It requires teaching the client to play the game of Hanabi (rules can be found [here](https://www.spillehulen.dk/media/102616/hanabi-card-game-rules.pdf)).
+Original README.md can be found [here](https://github.com/squillero/computational-intelligence/blob/master/project/hanabi/README.md) with some informations about how the system works. 
+This agent was developed base on the following [repository](https://github.com/squillero/computational-intelligence/blob/master/project/hanabi) provided as a tamplate for 2021/2022 edition of ```01URROV - Computational Intelligence``` at [Politecnico di Torino](https://www.polito.it/). 
 
 ## Server
-
-The server accepts passing objects provided in GameData.py back and forth to the clients.
-Each object has a ```serialize()``` and a ```deserialize(data: str)``` method that must be used to pass the data between server and client.
-
-Watch out! I'd suggest to keep everything in the same folder, since serialization looks dependent on the import path (thanks Paolo Rabino for letting me know).
-
-Server closes when no client is connected.
-
-To start the server:
-
-```bash
-python server.py <minNumPlayers>
+For launch the server the basic syntax is:
+```bash 
+python3 server.py
 ```
-
-Arguments:
-
-+ minNumPlayers, __optional__: game does not start until a minimum number of player has been reached. Default = 2
-
-
-Commands for server:
-
-+ exit: exit from the server
 
 ## Client
+Is an hard coded implementation, with a focus on the discard move, the aim of the agent is to avoid wrong moves (for a wrong move is meant to use a red token). 
 
-To start the server:
-
+For launch the client the complete syntax is:
 ```bash
-python client.py <IP> <port> <PlayerName>
+python3 client.py <SERVER_IP> <SERVER_PORT> <CLIENT_NAME>
 ```
 
-Arguments:
+If you launch ```python3 client.py```: the default values for the parameters are:
+```SERVER_IP = 127.0.0.1, SERVER_PORT = 1024 and CLIENT_NAME = SuperPippo```
 
-+ IP: IP address of the server (for localhost: 127.0.0.1)
-+ port: server TCP port (default: 1024)
-+ PlayerName: the name of the player
+After the launch of the client, you have to put the following command: ```ready``` for start the communication with the server and to tell to the others players that the client is ready. If you want to close after ```ready``` command use the combination of ```CTRL+C``` because the input is not read anymore (in the template implamentation the input was managed asynchronous), before giving ```ready``` command also ```exit``` command is available for quit the client. 
 
-Commands for client:
+For developing the hard coded version the only support used is a translated version of the rules, available [here](https://www.goblins.net/files/downloads/Hanabi.pdf), and [numpy](https://numpy.org) online communities. 
+All the "intelligence" of the agent is inside the ```suggestMove()``` function, where after asking for the current state of the game to the server is computing which play is more suggested. 
+The agent's hand is matrix based on the hints from others players or from moves done by the agent it self.
 
-+ exit: exit from the game
-+ ready: set your status to ready (lobby only)
-+ show: show cards
-+ hint \<type> \<destinatary>:
-  + type: 'color' or 'value'
-  + destinatary: name of the person you want to ask the hint to
-+ discard \<num>: discard the card *num* (\[0-4]) from your hand
+This works was developed by Mattia Dutto ([s287598@studenti.polito.it](mailto:s287598@studenti.polito.it))

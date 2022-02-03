@@ -11,8 +11,7 @@ import numpy as np
 
 if len(argv) < 4:
     print("You need the player name to start the game.")
-    playerName = "Test"  # For debug
-    playerName = "p2"  # add by me
+    playerName = "SuperPippo"  # add by me
     ip = HOST
     port = PORT
 else:
@@ -371,8 +370,6 @@ def suggestedMove(s):
                     # case card impossible to play
                     if stop == False and discardPile is not None:
                         checkVector = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
-                        #for j in range(table[myCardValues[i][1]]): # I don't need this
-                        #    checkVector[j] += 1
                         for j in range(len(discardPile)):
                             if discardPile[j][0] == myCardValues[i][
                                     1] and discardPile[j][1] < myCardValues[i][
