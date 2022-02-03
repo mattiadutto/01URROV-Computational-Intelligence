@@ -371,7 +371,7 @@ def suggestedMove(s):
                     # case card impossible to play
                     if stop == False and discardPile is not None:
                         checkVector = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
-                        #for j in range(table[myCardValues[i][1]]):
+                        #for j in range(table[myCardValues[i][1]]): # I don't need this
                         #    checkVector[j] += 1
                         for j in range(len(discardPile)):
                             if discardPile[j][0] == myCardValues[i][
@@ -524,6 +524,11 @@ def suggestedMove(s):
             print("[" + playerName + " - " + status + "]: ", end="")
             print(f"discard {minI}")
             discardCard(s, minI)
+            stop = True
+    if not stop:
+        print("[" + playerName + " - " + status + "]: ", end="")
+        print(f"discard {0}")
+        discardCard(s, 0)
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
