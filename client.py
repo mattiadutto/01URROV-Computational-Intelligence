@@ -542,7 +542,7 @@ def suggestedMove(s):
                         hintPlayer += 1
 
                     print(
-                        f"Suggested move: hint color {playerNames[hintPlayer]} {valueToColor(hintColor)} {suggestColorValues}"
+                        f"hint color {playerNames[hintPlayer]} {valueToColor(hintColor)} {suggestColorValues}"
                     )  # I can send a 0 and I will obtain the correct positions.
                     hintCards(s, "color", playerNames[hintPlayer],
                               valueToColor(hintColor), suggestColorValues)
@@ -555,7 +555,7 @@ def suggestedMove(s):
                         suggestPlayer += 1
 
                     print(
-                        f"Suggested move: hint value {playerNames[suggestPlayer]} {suggestValue} {suggestHintValues}"
+                        f"hint value {playerNames[suggestPlayer]} {suggestValue} {suggestHintValues}"
                     )
                     hintCards(s, "value", playerNames[suggestPlayer],
                               suggestValue, suggestHintValues)
@@ -570,7 +570,7 @@ def suggestedMove(s):
                 min = cardsValue[i]
                 minI = i
         if minI is not None:
-            print(f"Suggested move: discard {minI}")
+            print(f"discard {minI}")
             discardCard(s, minI)
 
 
