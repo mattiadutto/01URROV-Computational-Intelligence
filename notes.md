@@ -65,9 +65,10 @@ Fix: on suggest part when the player is starting as first
 ~~To fix: remove already hinted suggestions~~
 Fix: compute score
 Fix: update userTable after a change on the other player
+~~To test: update of the hint table (again)~~
 
+# 03 / 02 / 2022
 To test: way that if all previous card of a card are already played: discard that card!
-To test: update of the hint table (again)
 To test: multiple player
 To fix: hint color vs hint value
 To add: the fact that if one card is already present in the table to hint asap

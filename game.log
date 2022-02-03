@@ -1429,3 +1429,123 @@
 02/02/2022 05:50:57 PM INFO: Showing hand to: p2
 02/02/2022 05:50:59 PM INFO: Showing hand to: p1
 02/02/2022 05:51:11 PM INFO: Showing hand to: p1
+02/02/2022 06:09:53 PM INFO: Hanabi server started on 127.0.0.1:1024
+02/02/2022 06:10:40 PM INFO: Connected by: ('127.0.0.1', 56340)
+02/02/2022 06:10:40 PM INFO: Player connected: p2
+02/02/2022 06:10:45 PM INFO: Connected by: ('127.0.0.1', 56341)
+02/02/2022 06:10:45 PM INFO: Player connected: p1
+02/02/2022 06:10:46 PM INFO: Player ready: p1
+02/02/2022 06:10:48 PM INFO: Player ready: p2
+02/02/2022 06:10:48 PM INFO: Game start! Between: ['p2', 'p1']
+02/02/2022 06:10:48 PM INFO: Ok, let's start the game!
+02/02/2022 06:10:48 PM INFO: Showing hand to: p2
+02/02/2022 06:10:51 PM INFO: Player p2 providing hint to p1: cards with color green are in positions: [1, 2]
+02/02/2022 06:11:13 PM INFO: Showing hand to: p1
+02/02/2022 06:11:17 PM INFO: Player p1 providing hint to p2: cards with value 1 are in positions: [3, 4]
+02/02/2022 06:11:17 PM INFO: Showing hand to: p2
+02/02/2022 06:11:19 PM INFO: p2: card played and correctly put on the table
+02/02/2022 06:11:31 PM INFO: Showing hand to: p1
+02/02/2022 06:11:42 PM INFO: Player p1 providing hint to p2: cards with color green are in positions: [3]
+02/02/2022 06:11:42 PM INFO: Showing hand to: p2
+02/02/2022 06:11:52 PM INFO: p2: card played and correctly put on the table
+02/02/2022 06:11:55 PM INFO: Showing hand to: p1
+02/02/2022 06:12:00 PM INFO: Player p1 providing hint to p2: cards with value 2 are in positions: [1, 4]
+02/02/2022 06:12:00 PM INFO: Showing hand to: p2
+02/02/2022 06:12:02 PM INFO: Player p2 providing hint to p1: cards with value 1 are in positions: [1, 4]
+02/02/2022 06:12:27 PM INFO: Showing hand to: p1
+02/02/2022 06:12:34 PM INFO: Player p1 providing hint to p2: cards with color green are in positions: [4]
+02/02/2022 06:12:34 PM INFO: Showing hand to: p2
+02/02/2022 06:12:38 PM INFO: p2: card played and correctly put on the table
+02/02/2022 06:12:42 PM INFO: Showing hand to: p1
+02/02/2022 06:12:49 PM INFO: Player: p1: card 2 discarded successfully
+02/02/2022 06:12:49 PM INFO: Showing hand to: p2
+02/02/2022 06:13:45 PM INFO: Player p2 providing hint to p1: cards with value 1 are in positions: [3, 4]
+02/02/2022 06:14:02 PM INFO: p1: card played and correctly put on the table
+02/02/2022 06:14:02 PM INFO: Showing hand to: p2
+02/02/2022 06:14:04 PM INFO: Showing hand to: p1
+02/02/2022 06:14:09 PM INFO: Player p2 providing hint to p1: cards with value 3 are in positions: [1, 2]
+02/02/2022 06:14:25 PM INFO: Showing hand to: p1
+02/02/2022 06:15:03 PM INFO: p1: card played and correctly put on the table
+02/02/2022 06:15:04 PM INFO: Showing hand to: p1
+02/02/2022 06:15:09 PM INFO: Showing hand to: p2
+02/02/2022 06:15:13 PM INFO: Player p2 providing hint to p1: cards with value 4 are in positions: [0, 3, 4]
+02/02/2022 06:16:05 PM INFO: Showing hand to: p1
+02/02/2022 06:16:10 PM INFO: Player: p1: card 40 discarded successfully
+02/02/2022 06:16:10 PM INFO: Showing hand to: p2
+02/02/2022 06:16:13 PM INFO: Showing hand to: p1
+02/02/2022 06:16:15 PM INFO: Player p2 providing hint to p1: cards with color yellow are in positions: [3, 4]
+02/02/2022 06:16:32 PM INFO: Showing hand to: p1
+02/02/2022 06:16:35 PM INFO: Player: p1: card 27 discarded successfully
+02/02/2022 06:16:35 PM INFO: Showing hand to: p2
+02/02/2022 06:16:37 PM INFO: Player p2 providing hint to p1: cards with color white are in positions: [1, 4]
+02/02/2022 06:17:00 PM INFO: Showing hand to: p1
+02/02/2022 06:17:03 PM INFO: Player: p1: card 49 discarded successfully
+02/02/2022 06:17:03 PM INFO: Showing hand to: p2
+02/02/2022 06:19:14 PM INFO: Player p2 providing hint to p1: cards with color blue are in positions: [0, 4]
+02/02/2022 06:19:39 PM INFO: Showing hand to: p1
+02/02/2022 06:19:49 PM INFO: Player: p1: card 18 discarded successfully
+02/02/2022 06:19:49 PM INFO: Showing hand to: p2
+02/02/2022 06:22:13 PM INFO: Player p2 providing hint to p1: cards with value 2 are in positions: [3]
+02/02/2022 06:22:43 PM INFO: Showing hand to: p1
+02/02/2022 06:22:49 PM INFO: Player: p1: card 32 discarded successfully
+02/02/2022 06:22:52 PM INFO: Showing hand to: p2
+02/02/2022 06:24:33 PM WARNING: Player disconnected: p2
+02/02/2022 06:24:39 PM WARNING: Player disconnected: p1
+02/02/2022 06:24:39 PM INFO: Shutting down server
+02/02/2022 06:24:41 PM INFO: Hanabi server started on 127.0.0.1:1024
+02/02/2022 06:24:45 PM INFO: Connected by: ('127.0.0.1', 56396)
+02/02/2022 06:24:45 PM INFO: Player connected: p1
+02/02/2022 06:24:48 PM INFO: Connected by: ('127.0.0.1', 56402)
+02/02/2022 06:24:48 PM INFO: Player connected: p2
+02/02/2022 06:24:53 PM INFO: Player ready: p2
+02/02/2022 06:24:57 PM INFO: Player ready: p1
+02/02/2022 06:24:57 PM INFO: Game start! Between: ['p1', 'p2']
+02/02/2022 06:24:57 PM INFO: Ok, let's start the game!
+02/02/2022 06:24:58 PM INFO: Showing hand to: p1
+02/02/2022 06:25:07 PM INFO: Player p1 providing hint to p2: cards with value 2 are in positions: [4]
+02/02/2022 06:25:07 PM INFO: Showing hand to: p2
+02/02/2022 06:25:09 PM INFO: Player p2 providing hint to p1: cards with color white are in positions: [1, 2, 3, 4]
+02/02/2022 06:25:19 PM INFO: Player: p1: card 19 discarded successfully
+02/02/2022 06:25:19 PM INFO: Showing hand to: p2
+02/02/2022 06:26:41 PM WARNING: Player disconnected: p2
+02/02/2022 06:27:07 PM WARNING: Player disconnected: p1
+02/02/2022 06:27:07 PM INFO: Shutting down server
+02/02/2022 06:27:09 PM INFO: Hanabi server started on 127.0.0.1:1024
+02/02/2022 06:27:12 PM INFO: Connected by: ('127.0.0.1', 56426)
+02/02/2022 06:27:12 PM INFO: Player connected: p2
+02/02/2022 06:27:17 PM INFO: Connected by: ('127.0.0.1', 56427)
+02/02/2022 06:27:17 PM INFO: Player connected: p1
+02/02/2022 06:27:19 PM INFO: Player ready: p1
+02/02/2022 06:27:20 PM INFO: Player ready: p2
+02/02/2022 06:27:20 PM INFO: Game start! Between: ['p2', 'p1']
+02/02/2022 06:27:20 PM INFO: Ok, let's start the game!
+02/02/2022 06:27:20 PM INFO: Showing hand to: p2
+02/02/2022 06:27:24 PM INFO: Player p2 providing hint to p1: cards with color white are in positions: [1, 2]
+02/02/2022 06:27:36 PM INFO: Player: p1: card 30 discarded successfully
+02/02/2022 06:27:36 PM INFO: Showing hand to: p2
+02/02/2022 06:28:15 PM INFO: Player p2 providing hint to p1: cards with color yellow are in positions: [3]
+02/02/2022 06:28:25 PM INFO: Player: p1: card 29 discarded successfully
+02/02/2022 06:28:25 PM INFO: Showing hand to: p2
+02/02/2022 06:32:01 PM INFO: Player p2 providing hint to p1: cards with color yellow are in positions: [2, 4]
+02/02/2022 06:32:03 PM WARNING: Player disconnected: p2
+02/02/2022 06:32:11 PM WARNING: Player disconnected: p1
+02/02/2022 06:32:11 PM INFO: Shutting down server
+02/02/2022 06:32:14 PM INFO: Hanabi server started on 127.0.0.1:1024
+02/02/2022 06:32:15 PM INFO: Connected by: ('127.0.0.1', 56447)
+02/02/2022 06:32:15 PM INFO: Player connected: p1
+02/02/2022 06:32:26 PM INFO: Connected by: ('127.0.0.1', 56459)
+02/02/2022 06:32:26 PM INFO: Player connected: p2
+02/02/2022 06:32:28 PM INFO: Player ready: p2
+02/02/2022 06:32:30 PM INFO: Player ready: p1
+02/02/2022 06:32:30 PM INFO: Game start! Between: ['p1', 'p2']
+02/02/2022 06:32:30 PM INFO: Ok, let's start the game!
+02/02/2022 06:32:32 PM INFO: Showing hand to: p1
+02/02/2022 06:32:35 PM INFO: Player p1 providing hint to p2: cards with value 2 are in positions: [2, 4]
+02/02/2022 06:32:35 PM INFO: Showing hand to: p2
+02/02/2022 06:32:38 PM INFO: Player p2 providing hint to p1: cards with color green are in positions: [0, 4]
+02/02/2022 06:32:43 PM INFO: Player: p1: card 43 discarded successfully
+02/02/2022 06:32:48 PM INFO: Showing hand to: p2
+02/02/2022 06:33:07 PM INFO: Player p2 providing hint to p1: cards with color yellow are in positions: [1]
+02/02/2022 06:33:19 PM INFO: Player: p1: card 7 discarded successfully
+02/02/2022 06:33:19 PM INFO: Showing hand to: p2
+02/02/2022 06:33:42 PM WARNING: Player disconnected: p2
