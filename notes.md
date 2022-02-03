@@ -69,14 +69,16 @@ Fix: update userTable after a change on the other player
 
 # 03 / 02 / 2022
 To test: way that if all previous card of a card are already played: discard that card!
-To test: multiple player
-To fix: hint color vs hint value
+~~To test: multiple player~~
+~~To fix: hint color vs hint value~~
 To add: the fact that if one card is already present in the table to hint asap
 To add: manage when we have less then 5 cards.
 To add: discard a card for which we know the minimum thing (-1, -1), (-1, X), (X, -1)
-
-
+~~To add: print of the player before the move~~
+To remove: comments, unused file...
+Fix: player names, with multiple players
 
 Finished match
 - 13 (two players)
-- 
+- 0 (two players)
+-  
