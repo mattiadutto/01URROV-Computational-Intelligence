@@ -255,14 +255,45 @@ def playCard(s, cardNumber):
         return False
 
 
-def hintCards(s, t, destination, value, places=None):
+def hintCards(s, t, destinationIndex, value, places=None):
     global userTables
     global usedNoteTokens
+    global playerNames
+    global playerName
     try:
         if t != "colour" and t != "color" and t != "value":
             print("Error: type can be 'color' or 'value'")
             #return False
             return False
+
+        if places is None:
+            places = []
+
+        if t == "value":
+            # Value
+            if playerNames.index(
+                    playerName) < destinationIndex or playerNames.index(
+                        playerName) == 0:
+                destinationIndex += 1
+
+            print(
+                f"hint value {playerNames[destinationIndex]} {value} {places}")
+
+        else:
+            # Color
+            for i in range(5):
+                if userTables[destinationIndex][i][3] == colorToValue(value):
+                    places.append(i)
+
+            if playerNames.index(
+                    playerName) < destinationIndex or playerNames.index(
+                        playerName) == 0:
+                destinationIndex += 1
+
+            print(
+                f"hint color {playerNames[destinationIndex]} {value} {places}"
+            )  # I can send a 0 and I will obtain the correct positions.
+
         if t == "value":
             value = int(value)
             if int(value) > 5 or int(value) < 1:
@@ -275,12 +306,12 @@ def hintCards(s, t, destination, value, places=None):
                 )
                 return False
         s.send(
-            GameData.ClientHintData(playerName, destination, t,
-                                    value).serialize())
+            GameData.ClientHintData(playerName, playerNames[destinationIndex],
+                                    t, value).serialize())
         # My code
         #posLength = len(command.split(" "))
         #arguments = places #command.split(" ")
-        playerIndex = playerNames.index(destination)
+        playerIndex = destinationIndex  #playerNames.index(destination)
         if playerNames.index(playerName) < playerIndex or playerNames.index(
                 playerName) == 0:
             playerIndex -= 1
@@ -386,79 +417,80 @@ def suggestedMove(s):
                     continue
                 stop = True
         # case I have 2 cards with same value of same color
-        for i in range(NUMBER_OF_CARD):
-            for j in range(NUMBER_OF_CARD):
-                if i != j and (all(myCardValues[i] > -1)
-                               and all(myCardValues[i] == myCardValues[j])):
-                    print(
-                        f"discard {i} because already present in the cards set"
-                    )
-                    if not discardCard(s, i):
-                        continue
-                    stop = True
-        # add discard case in case that all cards of a value are played
-        for i in range(NUMBER_OF_CARD):  # I iterate over possible values
-            if all(table > i):
-                for j in range(NUMBER_OF_CARD):  # I iterate over my cards
-                    if myCardValues[j][0] == i:
+        if not stop:
+            for i in range(NUMBER_OF_CARD):
+                for j in range(NUMBER_OF_CARD):
+                    if i != j and (all(myCardValues[i] > -1) and
+                                   all(myCardValues[i] == myCardValues[j])):
                         print(
-                            f"discard {i} because already present in the table set"
+                            f"discard {i} because already present in the cards set"
                         )
                         if not discardCard(s, i):
                             continue
                         stop = True
-                    if stop:
-                        break
-            if stop:
-                break
+        # add discard case in case that all cards of a value are played
+        if not stop:
+            for i in range(NUMBER_OF_CARD):  # I iterate over possible values
+                if all(table > i):
+                    for j in range(NUMBER_OF_CARD):  # I iterate over my cards
+                        if myCardValues[j][0] == i:
+                            print(
+                                f"discard {i} because already present in the table set"
+                            )
+                            if not discardCard(s, i):
+                                continue
+                            stop = True
+                        if stop:
+                            break
+                if stop:
+                    break
         # discard a card because is impossible to play it
-
-        for i in range(NUMBER_OF_CARD):
-            if all(myCardValues[i] > -1):
-                if table[myCardValues[i][1]] >= myCardValues[i][
-                        0]:  # case card already played
-                    print(f"discard {i} because not need any more")
-                    if not discardCard(s, i):
-                        continue
-                    stop = True
-                # case card impossible to play
-                if stop == False and discardPile is not None:
-                    checkVector = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
-                    for j in range(table[myCardValues[i][1]]):
-                        checkVector[j] += 1
-                    for j in range(len(discardPile)):
-                        if discardPile[j][0] == myCardValues[i][
-                                1] and discardPile[j][1] < myCardValues[i][
-                                    0]:  # same color and value before my card
-                            checkVector[discardPile[j][1]] += 1
-                    if myCardValues[i][0] == 1 and checkVector[0] == 3:
-                        print(f"discard {i} because you can't play it")
+        if not stop:
+            for i in range(NUMBER_OF_CARD):
+                if all(myCardValues[i] > -1):
+                    if table[myCardValues[i][1]] >= myCardValues[i][
+                            0]:  # case card already played
+                        print(f"discard {i} because not need any more")
                         if not discardCard(s, i):
                             continue
                         stop = True
-                    if myCardValues[i][0] == 2 and checkVector[
-                            0] == 3 and checkVector[1] == 2:
-                        print(f"discard {i} because you can't play it")
-                        if not discardCard(s, i):
-                            continue
-                        stop = True
-                    if myCardValues[i][0] == 3 and checkVector[
-                            0] == 3 and checkVector[1] == 2 and checkVector[
-                                2] == 2:
-                        print(f"discard {i} because you can't play it")
-                        if not discardCard(s, i):
-                            continue
-                        stop = True
-                    if myCardValues[i][0] == 4 and checkVector[
-                            0] == 3 and checkVector[1] == 2 and checkVector[
-                                2] == 2 and checkVector[2] == 3:
-                        print(f"discard {i} because you can't play it")
-                        if not discardCard(s, i):
-                            continue
-                        stop = True
-            if stop:
-                break
-
+                    # case card impossible to play
+                    if stop == False and discardPile is not None:
+                        checkVector = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
+                        for j in range(table[myCardValues[i][1]]):
+                            checkVector[j] += 1
+                        for j in range(len(discardPile)):
+                            if discardPile[j][0] == myCardValues[i][
+                                    1] and discardPile[j][1] < myCardValues[i][
+                                        0]:  # same color and value before my card
+                                checkVector[discardPile[j][1]] += 1
+                        if myCardValues[i][0] == 1 and checkVector[0] == 3:
+                            print(f"discard {i} because you can't play it")
+                            if not discardCard(s, i):
+                                continue
+                            stop = True
+                        if myCardValues[i][0] == 2 and checkVector[
+                                0] == 3 and checkVector[1] == 2:
+                            print(f"discard {i} because you can't play it")
+                            if not discardCard(s, i):
+                                continue
+                            stop = True
+                        if myCardValues[i][0] == 3 and checkVector[
+                                0] == 3 and checkVector[
+                                    1] == 2 and checkVector[2] == 2:
+                            print(f"discard {i} because you can't play it")
+                            if not discardCard(s, i):
+                                continue
+                            stop = True
+                        if myCardValues[i][0] == 4 and checkVector[
+                                0] == 3 and checkVector[1] == 2 and checkVector[
+                                    2] == 2 and checkVector[2] == 3:
+                            print(f"discard {i} because you can't play it")
+                            if not discardCard(s, i):
+                                continue
+                            stop = True
+                if stop:
+                    break
     # Play suggestion
     if stop == False:
         for i in range(NUMBER_OF_CARD):
@@ -525,40 +557,55 @@ def suggestedMove(s):
                 valuePerColor == np.max(valuePerColor))
             hintPlayer, hintColor = hintPlayers[0], hintColorValues[
                 0]  # I have to take only the first case
-            # todo: add the part of check that is good to do color hint only if we don't have nothing else to suggest that can be play soon.
-            # fix from tabel[hintColor][0] -> table[hintColor]
-            if valuePerColor[hintPlayer, hintColor] > table[hintColor] and np.max(
-                    valuePerColor
-            ) != 0:  # I suggest the color if # of color of that color is grater then the # of card in the table
-                suggestColorValues = []
-                for i in range(5):
-                    if userTables[hintPlayer][i][3] == hintColor:
-                        suggestColorValues.append(i)
 
-                if hintPlayer is not None:
-                    if playerNames.index(
-                            playerName) < hintPlayer or playerNames.index(
-                                playerName) == 0:
-                        hintPlayer += 1
-
-                    print(
-                        f"hint color {playerNames[hintPlayer]} {valueToColor(hintColor)} {suggestColorValues}"
-                    )  # I can send a 0 and I will obtain the correct positions.
-                    hintCards(s, "color", playerNames[hintPlayer],
-                              valueToColor(hintColor), suggestColorValues)
+            # TO TEST
+            if suggestPlayer is not None and hintPlayer is not None:
+                if np.count_nonzero(
+                        userTables[hintPlayer][:, 2] ==
+                        suggestValue) >= np.count_nonzero(
+                            userTables[suggestPlayer][:, 3] == hintColor):
+                    # hint value
+                    hintCards(s, "value", hintPlayer, suggestValue,
+                              suggestHintValues)
+                    stop = True
+                else:
+                    # hint color
+                    hintCards(s, "color", suggestPlayer,
+                              valueToColor(hintColor))
+                    stop = True
             else:
+                if stop == False and valuePerColor[
+                        hintPlayer, hintColor] > table[hintColor] and np.max(
+                            valuePerColor
+                        ) != 0:  # I suggest the color if # of color of that color is grater then the # of card in the table
+                    if hintPlayer is not None:
+                        """
+                        suggestColorValues = []
+                        for i in range(5):
+                            if userTables[hintPlayer][i][3] == hintColor:
+                                suggestColorValues.append(i)
+                        
+                        if playerNames.index(playerName) < hintPlayer or playerNames.index(playerName) == 0:
+                            hintPlayer += 1
+                        
+                        print(f"hint color {playerNames[hintPlayer]} {valueToColor(hintColor)} {suggestColorValues}")  # I can send a 0 and I will obtain the correct positions.
+                        hintCards(s, "color", playerNames[hintPlayer], valueToColor(hintColor), suggestColorValues)
+                        """
+                        hintCards(s, "color", hintPlayer,
+                                  valueToColor(hintColor))
+                        stop = True
+                elif stop == False:
+                    if suggestPlayer is not None:
+                        """
+                        if playerNames.index(playerName) < suggestPlayer or playerNames.index(playerName) == 0:
+                            suggestPlayer += 1
 
-                if suggestPlayer is not None:
-                    if playerNames.index(
-                            playerName) < suggestPlayer or playerNames.index(
-                                playerName) == 0:
-                        suggestPlayer += 1
-
-                    print(
-                        f"hint value {playerNames[suggestPlayer]} {suggestValue} {suggestHintValues}"
-                    )
-                    hintCards(s, "value", playerNames[suggestPlayer],
-                              suggestValue, suggestHintValues)
+                        print(f"hint value {playerNames[suggestPlayer]} {suggestValue} {suggestHintValues}")
+                        hintCards(s, "value", playerNames[suggestPlayer], suggestValue, suggestHintValues)
+                        """
+                        hintCards(s, "value", suggestPlayer, suggestValue,
+                                  suggestHintValues)
+                        stop = True
     # Discard part
     if usedNoteTokens > 0 and stop == False and suggestPlayer is None and np.max(
             valuePerColor) == 0:
